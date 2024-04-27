@@ -1,6 +1,7 @@
 // Catch The All Element Here 
 const productContainer = document.getElementById("products")
 
+
 const showProducts = (productList)=> {
     productContainer.innerHTML = "";
     productList.forEach((item)=>{
@@ -15,7 +16,7 @@ const showProducts = (productList)=> {
             productName.textContent = item.title
             
         const productPrice = document.createElement('p') 
-        productPrice.textContent =` price : $${item.price}`;
+        productPrice.textContent = `price : $${item.price}`;
 
         productBox.append(
             productImg ,
@@ -30,21 +31,22 @@ const showProducts = (productList)=> {
     })
 }
 
+
 const FetchProducts = async (searchQuery , sort ,category ) => {
     
     let url = 'https://fakestoreapi.com/products'
     
     if(sort) {
-        url = "https://fakestoreapi.com/products?sort=${sort}"
+        url = `https://fakestoreapi.com/products?sort=${sort}`
     }
 
     
     if(searchQuery) {
-        url = "https://fakestoreapi.com/products?title=${searchQuery}"
+        url = `https://fakestoreapi.com/products?title=${searchQuery}`
     }
 
     if(category) {
-        url = "https://fakestoreapi.com/products/category/${category}"
+        url = `https://fakestoreapi.com/products/category/${category}`
     }
 
     try {
@@ -57,7 +59,8 @@ const FetchProducts = async (searchQuery , sort ,category ) => {
     }
 }
 
-FetchProducts()
+FetchProducts();
+
 
 // Filter Logic Here 
 
@@ -68,15 +71,21 @@ selectedCategory.addEventListener('change' , ()=> {
    
 })
 
-// Search Logic Here 
+// Catch the search input element
+const searchInput = document.querySelector('.product-search input');
+searchInput.addEventListener('input', (event) => {
+    const searchQuery = event.target.value.trim();
+    
+    FetchProducts(searchQuery, '', '');
+});
 
-// Catch Cateory Element 
 
 // Sort Logic Here 
 
 // Catch Cateory Element 
 const sortingOrder = document.getElementById('sort')
-    sortingOrder.addEventListener('change' , ()=> {   
+    sortingOrder.addEventListener('change' , ()=> {
+        
+       
     FetchProducts('',sortingOrder.value ,'')
-
 })
