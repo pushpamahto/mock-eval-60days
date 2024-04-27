@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Eval</title>
+    <title>Mock eval </title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-     <nav>
-       <!-- <h4>Product Listing Page</h4> -->
-        <div class="controls">
-           
-           <a id="a" href="">Product Listing Page</a>
-            <select  id="category-select">
-                <option value="">All category</option>
-                <option value="">Men's clothing</option>
-                <option value="">Women's clothing</option>
-            </select>
-
-            <input type="text" id="search-input" placeholder="search products...">
-
-            <select  id="sort-select">
-                <option value="asc">Price:Low to High</option>
-                <option value="asc">Price:High to Low</option>
-            </select>
-        </div>
+    
+    <nav>
+        <div class="nav-container">
+            <a id="a">Products Listing Page </a>
+            <div class="product-filter">
+                    <select name="" id="filter">
+                        <option value="">Select Category </option>
+                        <option value="men's clothing">men's clothing</option>
+                        <option value="women's clothing">Women's clothing</option>
+                        <option value="electronics">Electronics </option>
+                        <option value="jewelery">Jewelery </option>
+                    </select>
+            </div>
+            <div class="product-search">
+                <input type="text" placeholder="search products">
+            </div>
+            <div class="product-sort">
+                <select name="" id="sort">
+                    <option value="">Sort By </option>
+                    <option value="asc">Price : Low to High</option>
+                    <option value="desc">Price : High to Low</option>
+                </select>
+            </div>
+            </div>
     </nav>
-
-    <div class="product-grid" id="product-grid"></div> 
     
+    <div id="products">
 
-    
-</body>
-
+    </div>
 <script src="script.js"></script>
+</body>
 </html>

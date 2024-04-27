@@ -1,77 +1,82 @@
-document.addEventListener("DOMContentLoaded", function() {
-    let categorySelect = document.getElementById("category-select");
-    let searchInput = document.getElementById("search-input")
-    let sortSelect = document.getElementById("sort-select")
-    let productGrid = document.getElementById("product-grid")
+// Catch The All Element Here 
+const productContainer = document.getElementById("products")
 
-    fetch("https://fakestoreapi.com/products/categories")
-    .then(response => response.json())
-    .then(categories => {
-        let option = document.createElement("option");
-        option.value = category;
-        option.textContent = category;
-        categorySelect.appendChild(option);
-    });
-});
+const showProducts = (productList)=> {
+    productContainer.innerHTML = "";
+    productList.forEach((item)=>{
+    // Now we will create some html element to display products data on UI 
+    const productBox = document.createElement('div');
+        productBox.className = "product-content";  
 
-function fetchProducts(){
-    let category = categorySelect.value;
-    let searchQuery = searchInput.value.toLowerCase();
-    let sortOrder = sortSelect.value;
+        const productImg = document.createElement('img')
+              productImg.src = item.image;
+        
+        const productName = document.createElement('h2') 
+            productName.textContent = item.title
+            
+        const productPrice = document.createElement('p') 
+        productPrice.textContent =` price : $${item.price}`;
 
-    let url = "https://fakestoreapi.com/products";
+        productBox.append(
+            productImg ,
+            productName ,
+            productPrice
+        )
 
-    if(category){
-        url += `?category=${category}`;
-    }
+        productContainer.appendChild (
+            productBox
+        )
 
-    fetch(url)
-    .then(response => response.json())
-    .then(products => {
-
-        if(searchQuery){
-            products = products.filter(product =>
-                product.title.toLowerCase().includes(searchquery)
-            );
-        }
-
-        if(sortOrder ==="asc"){
-            products.sort((a,b) => a.price - b.price);
-        }else if(sortOrder ==="desc"){
-            products.sort((a,b) => b.price - a.price);
-        }
-
-        productGrid.innerHTML="";
-
-        products.foreach(product => {
-            let productItem = document.createElement("div");
-            productItem.classList.add("product-item");
-
-            let image = document.creaateElement("img");
-            image.src = product.image;
-            image.alt = product.title;
-            image.classList.add("product-image");
-
-            let title = document.createElement("div");
-            title.textContent = product.title;
-            title.classList.add("product-title");
-
-            let price = document.createElement("div");
-            price.textCont = `$${product.price.toFixed(2)}`;
-            price.className.add = ("product-price");
-
-            productItem.appendChild(image);
-            productItem.appendChild(title);
-            productItem.appendChild(price);
-
-            productGrid.appendChild(productItem)
-
-        });
-    });
+    })
 }
 
-categorySelect.addEventListener("change", fetchProducts);
-searchInput.addEventListener("input", fetchProducts);
-sortSelect.addEventListener("change", fetchProducts);
+const FetchProducts = async (searchQuery , sort ,category ) => {
+    
+    let url = 'https://fakestoreapi.com/products'
+    
+    if(sort) {
+        url = "https://fakestoreapi.com/products?sort=${sort}"
+    }
 
-fetchProducts();
+    
+    if(searchQuery) {
+        url = "https://fakestoreapi.com/products?title=${searchQuery}"
+    }
+
+    if(category) {
+        url = "https://fakestoreapi.com/products/category/${category}"
+    }
+
+    try {
+        const response = await fetch(url)
+        const finalResponse = await response.json()
+        showProducts(finalResponse)
+        console.log(finalResponse)
+    } catch (error) {
+        console.log("error : " , error)
+    }
+}
+
+FetchProducts()
+
+// Filter Logic Here 
+
+// Catch Cateory Element 
+const selectedCategory = document.getElementById('filter')
+selectedCategory.addEventListener('change' , ()=> {   
+        FetchProducts('','' ,selectedCategory.value)
+   
+})
+
+// Search Logic Here 
+
+// Catch Cateory Element 
+
+// Sort Logic Here 
+
+// Catch Cateory Element 
+const sortingOrder = document.getElementById('sort')
+    sortingOrder.addEventListener('change' , ()=> {   
+    FetchProducts('',sortingOrder.value ,'')
+
+})

@@ -1,20 +1,38 @@
-body{
-
+ body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
 }
 nav{
     background-color: black;
+    padding: 10px;
+    margin-bottom: 5%;
+}
+#a{
+    color: azure;
 }
 nav > div{
     display: flex;
     justify-content: space-around;
-    margin-bottom: 1%;
+}
+
+
+
+#products {
+    width: 60%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 50px;
+}
+
+.product-content {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     padding: 10px;
 }
-#a{
-    text-decoration: none;
-    color: azure;
-}
-.product-grid{
-    display:grid;
-   
+
+.product-content img {
+    width: 200px;
+    height: 180px; 
 }
