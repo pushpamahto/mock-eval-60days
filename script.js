@@ -1,91 +1,103 @@
-// Catch The All Element Here 
-const productContainer = document.getElementById("products")
+document.addEventListener('DOMContentLoaded', function() {
+    let productsContainer = document.getElementById('products');
+    let filterSelect = document.getElementById('filter');
+    let searchInput = document.querySelector('.product-search input');
+    let sortSelect = document.getElementById('sort');
+    let products = [];
 
+    // Fetch products from FakeStoreAPI
+    async function fetchProducts() {
 
-const showProducts = (productList)=> {
-    productContainer.innerHTML = "";
-    productList.forEach((item)=>{
-    // Now we will create some html element to display products data on UI 
-    const productBox = document.createElement('div');
-        productBox.className = "product-content";  
+        try {
+            const response = await fetch('https://fakestoreapi.com/products');
+            const data = await response.json();
+            products = data;
+            return data;
 
-        const productImg = document.createElement('img')
-              productImg.src = item.image;
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    }
+
+    // Display products
+    async function displayProducts() {
+
+        let productsData = await fetchProducts();
+        productsContainer.innerHTML = '';
+
+        if (productsData && productsData.length > 0) {
+            productsData.forEach(product => {
+                let productItem = document.createElement('div');
+
+                productItem.classList.add('product-content');
+                productItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <h3>${product.title}</h3>
+                    <p>Price: $${product.price}</p>
+                `;
+
+                productsContainer.appendChild(productItem);
+            });
+        } else {
+            productsContainer.innerHTML = '<p>No products found</p>';
+        }
+    }
+
+    displayProducts();
+
+    // Filter products by category
+    filterSelect.addEventListener('change', function() {
+
+        let category = this.value;
+        if (category) {
+            let filteredProducts = products.filter(product => product.category === category);
+            displayFilteredProducts(filteredProducts);
+        } else {
+            displayProducts();
+        }
+    });
+
+    // Display filtered products
+    function displayFilteredProducts(filteredProducts) {
+        productsContainer.innerHTML = '';
+
+        if (filteredProducts.length > 0) {
+
+            filteredProducts.forEach(product => {
+
+                let productItem = document.createElement('div');
+                productItem.classList.add('product-content');
+                productItem.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <h3>${product.title}</h3>
+                    <p>Price: $${product.price}</p>
+                `;
+
+                productsContainer.appendChild(productItem);
+            });
+        } else {
+            productsContainer.innerHTML = '<p>No products found for this category</p>';
+        }
+    }
+
+    // Search products by title
+    searchInput.addEventListener('input', function() {
+
+        let searchTerm = this.value.trim().toLowerCase();
+        let filteredProducts = products.filter(product => product.title.toLowerCase().includes(searchTerm));
+        displayFilteredProducts(filteredProducts);
+    });
+
+    // Sort products by price
+    sortSelect.addEventListener('change', function() {
         
-        const productName = document.createElement('h2') 
-            productName.textContent = item.title
-            
-        const productPrice = document.createElement('p') 
-        productPrice.textContent = `price : $${item.price}`;
-
-        productBox.append(
-            productImg ,
-            productName ,
-            productPrice
-        )
-
-        productContainer.appendChild (
-            productBox
-        )
-
-    })
-}
-
-
-const FetchProducts = async (searchQuery , sort ,category ) => {
-    
-    let url = 'https://fakestoreapi.com/products'
-    
-    if(sort) {
-        url = `https://fakestoreapi.com/products?sort=${sort}`
-    }
-
-    
-    if(searchQuery) {
-        url = `https://fakestoreapi.com/products?title=${searchQuery}`
-    }
-
-    if(category) {
-        url = `https://fakestoreapi.com/products/category/${category}`
-    }
-
-    try {
-        const response = await fetch(url)
-        const finalResponse = await response.json()
-        showProducts(finalResponse)
-        console.log(finalResponse)
-    } catch (error) {
-        console.log("error : " , error)
-    }
-}
-
-FetchProducts();
-
-
-// Filter Logic Here 
-
-// Catch Cateory Element 
-const selectedCategory = document.getElementById('filter')
-selectedCategory.addEventListener('change' , ()=> {   
-        FetchProducts('','' ,selectedCategory.value)
-   
-})
-
-// Catch the search input element
-const searchInput = document.querySelector('.product-search input');
-searchInput.addEventListener('input', (event) => {
-    const searchQuery = event.target.value.trim();
-    
-    FetchProducts(searchQuery, '', '');
+        let sortOrder = this.value;
+        if (sortOrder === 'asc') {
+            let sortedProducts = products.slice().sort((a, b) => a.price - b.price);
+            displayFilteredProducts(sortedProducts);
+        } else if (sortOrder === 'desc') {
+            let sortedProducts = products.slice().sort((a, b) => b.price - a.price);
+            displayFilteredProducts(sortedProducts);
+        }
+    });
 });
-
-
-// Sort Logic Here 
-
-// Catch Cateory Element 
-const sortingOrder = document.getElementById('sort')
-    sortingOrder.addEventListener('change' , ()=> {
-        
-       
-    FetchProducts('',sortingOrder.value ,'')
-})

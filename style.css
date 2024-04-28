@@ -12,6 +12,7 @@ nav{
 #a{
     color: azure;
 }
+
 nav > div{
     display: flex;
     justify-content: space-around;
